@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/bottomWidget.dart';
 import '../widgets/navigationBar.dart';
 
 class ReturnRefundPolicyPage extends StatelessWidget {

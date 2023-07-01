@@ -1,6 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:maharani_bakery_app/data/data.dart';
 import 'package:maharani_bakery_app/models/cake.dart';
 import 'package:maharani_bakery_app/models/cakeCategory.dart';
@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/childCategory.dart';
 import 'home_screen.dart';
-import 'package:dio/dio.dart';
 class SplashScreen extends StatefulWidget {
   static String idScreen = "splash";
   const SplashScreen({Key? key}) : super(key: key);

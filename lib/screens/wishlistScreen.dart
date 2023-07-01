@@ -1,28 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maharani_bakery_app/data/data.dart';
-import 'package:maharani_bakery_app/models/order.dart';
-import 'package:maharani_bakery_app/screens/cart_summary.dart';
-import 'package:maharani_bakery_app/widgets/cart_operation.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
-// import 'package:location/location.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/cake.dart';
-import '../models/user.dart';
 import '../widgets/navigationBar.dart';
 import '../widgets/progressDialog.dart';
 import 'cakeItemScreen.dart';
-import 'home_screen.dart';
 import 'itemScreen.dart';
-import 'package:intl/intl.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
 
 class WishlistScreen extends StatefulWidget {
   static const String idScreen = "wishlist";

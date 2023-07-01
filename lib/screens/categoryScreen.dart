@@ -1,43 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:maharani_bakery_app/components/build_rating.dart';
+import 'package:get/get.dart';
 import 'package:maharani_bakery_app/data/data.dart';
+import 'package:maharani_bakery_app/models/category.dart';
 import 'package:maharani_bakery_app/models/childCategory.dart';
 import 'package:maharani_bakery_app/models/food.dart';
-import 'package:maharani_bakery_app/models/category.dart';
-import 'package:maharani_bakery_app/screens/itemScreen.dart';
-import 'package:maharani_bakery_app/screens/wishlistScreen.dart';
-import 'package:maharani_bakery_app/widgets/Divider.dart';
-import 'package:maharani_bakery_app/widgets/add_item.dart';
-import 'package:maharani_bakery_app/widgets/navigationBar.dart';
-import 'package:maharani_bakery_app/widgets/rounded_button.dart';
-import 'package:maharani_bakery_app/widgets/verticalDivider.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:maharani_bakery_app/screens/cart_screen.dart';
+import 'package:maharani_bakery_app/screens/itemScreen.dart';
 import 'package:maharani_bakery_app/screens/privacyPolicyScreen.dart';
 import 'package:maharani_bakery_app/screens/returnAndRefundPolicyScreen.dart';
 import 'package:maharani_bakery_app/screens/termsAndConditionsScreen.dart';
-import 'package:maharani_bakery_app/widgets/bottomWidget.dart';
-import 'package:maharani_bakery_app/widgets/cakeCategories.dart';
-import 'package:maharani_bakery_app/widgets/categories.dart';
-import 'package:maharani_bakery_app/widgets/header.dart';
+import 'package:maharani_bakery_app/screens/wishlistScreen.dart';
 import 'package:maharani_bakery_app/widgets/header_second.dart';
 import 'package:maharani_bakery_app/widgets/navigationBar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:maharani_bakery_app/models/category.dart';
-import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../models/cakeChildCategory.dart';
-import '../widgets/header_second.dart';
-import 'cakeItemScreen.dart';
+
 import 'cakeTypeScreen.dart';
-import 'cart_screen.dart';
 import 'cart_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -84,7 +63,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
-  Future<void> _loadMoreItems() async{
+  Future<void> _loadMoreItems() async {
     setState(() {
       endOfList = false;
     });
@@ -95,14 +74,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
     await Future.delayed(Duration(seconds: 2));
     if (widget.category.items.length > items.length + 20) {
       newItems = widget.category.items.sublist(items.length, items.length + 20);
-
     } else {
-      newItems = widget.category.items.sublist(items.length, widget.category.items.length);
-
+      newItems = widget.category.items
+          .sublist(items.length, widget.category.items.length);
     }
+
     setState(() {
       items.addAll(newItems);
     });
+
 
     setState(() {
       loading = false;
@@ -111,60 +91,45 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    widget.category.items.sort((a, b) => int.parse(a.number).compareTo(int.parse(b.number)));
+    widget.category.items
+        .sort((a, b) => int.parse(a.number).compareTo(int.parse(b.number)));
 
     setState(() {
       if (widget.category.items.length > 20) {
         items = widget.category.items.sublist(0, 20);
-
       } else {
         items = widget.category.items;
       }
     });
 
     _scrollController.addListener(() async {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         if (items.length != widget.category.items.length) {
-
           await _loadMoreItems();
-
         } else {
           setState(() {
             endOfList = true;
           });
         }
-
       }
     });
   }
 
-  Widget _buildMenu(BuildContext context, Food menuItem, int index, int length) {
-
+  Widget _buildMenu(
+      BuildContext context, Food menuItem, int index, int length) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        border: index > 1 ? (length % 2 != 0 && index == length - 2) ?
-        Border(
-          top: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-          bottom: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) :
-        Border(
-          top: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) : (length % 2 != 0 && index == length - 2) ?
-        Border(
-          bottom: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) : Border(),
-      ),
+          border: index < 2
+              ? Border(
+                  right: BorderSide(color: Colors.black12.withOpacity(0.2)))
+              : index > length - 2
+                  ? Border(
+                      right: BorderSide(color: Colors.black12.withOpacity(0.2)))
+                  : Border.all(color: Colors.black12.withOpacity(0.1))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -176,23 +141,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
               width: 150.0,
               height: 150.0,
               decoration: BoxDecoration(
-                // image: DecorationImage(
-                //     image: OptimizedCacheImageProvider("https://res.cloudinary.com/maharani/image/upload/${menuItem.imageUrl}/image_asset/${menuItem.firebaseId}.jpg"), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(15.0)
-              ),
+                  // image: DecorationImage(
+                  //     image: OptimizedCacheImageProvider("https://res.cloudinary.com/maharani/image/upload/${menuItem.imageUrl}/image_asset/${menuItem.firebaseId}.jpg"), fit: BoxFit.cover),
+                  borderRadius: BorderRadius.circular(15.0)),
               child: CachedNetworkImage(
-                imageUrl: "https://res.cloudinary.com/maharani/image/upload/${menuItem.imageUrl}/image_asset/${menuItem.firebaseId}.jpg",
+                imageUrl:
+                    "https://res.cloudinary.com/maharani/image/upload/${menuItem.imageUrl}/image_asset/${menuItem.firebaseId}.jpg",
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => Icon(Icons.error),
-
-                placeholder: (context, url) => Image.asset("assets/images/load.gif"),
+                placeholder: (context, url) =>
+                    Image.asset("assets/images/load.gif"),
               ),
             ),
-            SizedBox(height: 20.0,),
+            SizedBox(
+              height: 20.0,
+            ),
             Column(
-
               children: [
                 Text(
                   "${menuItem.name}",
@@ -200,121 +166,75 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       color: Colors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      fontFamily: "Candarai"
-                  ),
+                      fontFamily: "Candarai"),
                   textAlign: TextAlign.center,
-
                 ),
-                SizedBox(height: 5.0,),
-                menuItem.inStock ? menuItem.offerAvailable ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '\u{20B9} ${menuItem.price}',
-                      style: TextStyle(
-                          color: Colors.black45,
+                SizedBox(
+                  height: 5.0,
+                ),
+                menuItem.inStock
+                    ? menuItem.offerAvailable
+                        ? SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '\u{20B9} ${menuItem.price}',
+                                  style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Text(
+                                  '\u{20B9} ${menuItem.priceOffer}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+
+                                // Text(
+                                //   '${(((menuItem.price - menuItem.priceOffer) / menuItem.price) * 100).toInt()}% OFF',
+                                //   style: TextStyle(
+                                //     color: Colors.green,
+                                //     fontSize: 15,
+                                //     fontWeight: FontWeight.bold,
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                        )
+                        : Text(
+                            '\u{20B9} ${menuItem.price}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                    : Text(
+                        'OUT OF STOCK',
+                        style: TextStyle(
+                          color: Colors.red,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.lineThrough
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 5.0,),
-                    Text(
-                      '\u{20B9} ${menuItem.priceOffer}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 5.0,),
-
-                    // Text(
-                    //   '${(((menuItem.price - menuItem.priceOffer) / menuItem.price) * 100).toInt()}% OFF',
-                    //   style: TextStyle(
-                    //     color: Colors.green,
-                    //     fontSize: 15,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-
-                  ],
-                ) : Text(
-                  '\u{20B9} ${menuItem.price}',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ) : Text(
-                  'OUT OF STOCK',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ],
             ),
           ],
         ),
       ),
     );
-    // return Center(
-    //   child: Stack(
-    //     children: [
-    //       Container(
-    //         width: double.infinity,
-    //         height: double.infinity,
-    //         decoration: BoxDecoration(
-    //             border: Border.all(color: Colors.black12.withOpacity(0.2))
-    //         ),
-    //         child: Padding(
-    //           padding: const EdgeInsets.all(8.0),
-    //           child: Column(
-    //             children: [
-    //               Container(
-    //                 width: 150.0,
-    //                 height: 150.0,
-    //                 decoration: BoxDecoration(
-    //                     image: DecorationImage(
-    //                         image: OptimizedCacheImageProvider("https://res.cloudinary.com/maharani/image/upload/${menuItem.imageUrl}/image_asset/${menuItem.firebaseId}.jpg"), fit: BoxFit.cover),
-    //                     borderRadius: BorderRadius.circular(15.0)
-    //                 ),
-    //               ),
-    //               SizedBox(height: 20.0,),
-    //
-    //               Column(
-    //                 children: [
-    //                   Text(
-    //                     menuItem.name,
-    //                     style: TextStyle(
-    //                         color: Colors.black,
-    //                         fontSize: 15,
-    //                         fontWeight: FontWeight.bold,
-    //                         fontFamily: "Candarai"
-    //                     ),
-    //                     textAlign: TextAlign.center,
-    //
-    //                   ),
-    //                   Text(
-    //                     '\u{20B9} ${menuItem.price}',
-    //                     style: TextStyle(
-    //                       color: Colors.black,
-    //                       fontSize: 13,
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                   )
-    //                 ],
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //
-    //     ],
-    //   ),
-    // );
   }
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -345,8 +265,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
           children: [
             Container(
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Image.asset('assets/images/1.png', color: brandGold,)
-            ),
+                child: Image.asset(
+                  'assets/images/1.png',
+                  color: brandGold,
+                )),
             Divider(
               height: 1,
               thickness: 1,
@@ -356,93 +278,128 @@ class _CategoryScreenState extends State<CategoryScreen> {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => CakeTypeScreen(category: cakeCategories[0], categoriesGlobal: cakeCategories[0].childCategories,))
-                );
-
+                    MaterialPageRoute(
+                        builder: (_) => CakeTypeScreen(
+                              category: cakeCategories[0],
+                              categoriesGlobal:
+                                  cakeCategories[0].childCategories,
+                            )));
               },
               child: ListTile(
-                leading: Icon(Icons.cake, color: brandGold,),
-                title: Text('Cakes', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.cake,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Cakes',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             GestureDetector(
-              onTap: () async{
-                await _makePhoneCall("tel:${phoneNumber[locationName]}", context);
+              onTap: () async {
+                await _makePhoneCall(
+                    "tel:${phoneNumber[locationName]}", context);
               },
               child: ListTile(
-                leading: Icon(Icons.phone, color: brandGold,),
-                title: Text('Contact', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.phone,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Contact',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => WishlistScreen())
-                );
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => WishlistScreen()));
               },
               child: ListTile(
-                leading: Icon(Icons.favorite, color: brandGold,),
-                title: Text('Wishlist', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.favorite,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Wishlist',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
-
                 Navigator.push(
                     context, MaterialPageRoute(builder: (_) => CartScreen()));
               },
               child: ListTile(
-                leading: Icon(Icons.shopping_cart_outlined, color: brandGold,),
-                title: Text('Cart', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Cart',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             Spacer(),
             GestureDetector(
               onTap: () {
-
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PrivacyPolicyPage())
-                );
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => PrivacyPolicyPage()));
               },
               child: ListTile(
-                leading: Icon(Icons.policy_outlined, color: brandGold,),
-                title: Text('Privacy Policy', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.policy_outlined,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Privacy Policy',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
-
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ReturnRefundPolicyPage())
-                );
-
+                    MaterialPageRoute(
+                        builder: (_) => ReturnRefundPolicyPage()));
               },
               child: ListTile(
-                leading: Icon(Icons.policy_outlined, color: brandGold,),
-                title: Text('Returns and Refunds', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.policy_outlined,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Returns and Refunds',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
-
-
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => TermsAndConditionsPage())
-                );
+                    MaterialPageRoute(
+                        builder: (_) => TermsAndConditionsPage()));
               },
               child: ListTile(
-                leading: Icon(Icons.policy_outlined, color: brandGold,),
-                title: Text('Terms and Conditions', style: TextStyle(color: brandGold),),
+                leading: Icon(
+                  Icons.policy_outlined,
+                  color: brandGold,
+                ),
+                title: Text(
+                  'Terms and Conditions',
+                  style: TextStyle(color: brandGold),
+                ),
               ),
             ),
-            SizedBox(height: 20.0,),
+            SizedBox(
+              height: 20.0,
+            ),
           ],
         ),
       ),
@@ -455,89 +412,115 @@ class _CategoryScreenState extends State<CategoryScreen> {
               scrollDirection: Axis.vertical,
               child: Column(
                 children: [
-                  SizedBox(height: 130.0,),
+                  SizedBox(
+                    height: 130.0,
+                  ),
 
-                  // Expanded(
-                  //   child: GridView.count(
-                  //     physics: BouncingScrollPhysics(),
-                  //     padding: EdgeInsets.all(0.0),
-                  //
-                  //     crossAxisCount: 2,
-                  //     childAspectRatio: (1 / 1.4),
-                  //     children: List.generate(category.menu.length, (index) {
-                  //       Food food = category.menu[index];
-                  //       return GestureDetector(
-                  //           onTap: (){
-                  //             Navigator.push(context, MaterialPageRoute(builder: (context) => ItemScreen(category: category, food: category.menu[index])),);
-                  //
-                  //           },
-                  //           child: _buildMenu(context, food)
-                  //       );
-                  //     }),
-                  //   ),
-                  // ),
-
-                  for(var index=0; index<items.length; index+=2)
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ItemScreen(category: widget.category, food: widget.category.items[index], categoryMain: widget.categoryMain,)),);
-
-                                },
+                  GridView.builder(
+                      key: UniqueKey(),
+                      itemCount: items.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: MediaQuery.of(context).orientation ==
+                                  Orientation.portrait
+                              ? 2
+                              : 3,
+                          mainAxisExtent: 300),
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ItemScreen(
+                                        category: widget.category,
+                                        food: widget.category.items[index],
+                                        categoryMain: widget.categoryMain,
+                                      )),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
                                 child: _buildMenu(
-                                    context,
-                                    widget.category.items[index],
-                                    index,
-                                    widget.category.items.length
-                                ),
-                              )
-                          ),
-
-                          VerticalDividerWidget(),
-                          widget.category.items.length - 1 != index ?
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => ItemScreen(category: widget.category, food: widget.category.items[index + 1], categoryMain: widget.categoryMain,)),);
-
-                              },
-                              child: _buildMenu(
-                                  context,
-                                  widget.category.items[index+1],
-                                  index + 1,
-                                  widget.category.items.length
+                                    context, items[index], index, items.length),
                               ),
-                            ),
-                          ) :
-                          Expanded(child: Container()),
-                        ],
-                      ),
-                    ),
+                            ],
+                          ),
+                        );
+                      }),
 
-                  SizedBox(height: 20.0,),
+                  // for(var index=0; index<items.length; index+=2)
+                  //   IntrinsicHeight(
+                  //     child: Row(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Expanded(
+                  //             child: GestureDetector(
+                  //               onTap: (){
+                  //                 Navigator.push(context, MaterialPageRoute(builder: (context) => ItemScreen(category: widget.category, food: widget.category.items[index], categoryMain: widget.categoryMain,)),);
+                  //
+                  //               },
+                  //               child: _buildMenu(
+                  //                   context,
+                  //                   widget.category.items[index],
+                  //                   index,
+                  //                   widget.category.items.length
+                  //               ),
+                  //             )
+                  //         ),
+                  //
+                  //         VerticalDividerWidget(),
+                  //         widget.category.items.length - 1 != index ?
+                  //         Expanded(
+                  //           child: GestureDetector(
+                  //             onTap: (){
+                  //               Navigator.push(context, MaterialPageRoute(builder: (context) => ItemScreen(category: widget.category, food: widget.category.items[index + 1], categoryMain: widget.categoryMain,)),);
+                  //
+                  //             },
+                  //             child: _buildMenu(
+                  //                 context,
+                  //                 widget.category.items[index+1],
+                  //                 index + 1,
+                  //                 widget.category.items.length
+                  //             ),
+                  //           ),
+                  //         ) :
+                  //         Expanded(child: Container()),
+                  //       ],
+                  //     ),
+                  //   ),
 
-                  loading ? Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                    ),
-                  ) : Container(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
 
-                  SizedBox(height: 20.0,),
+                  loading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
+                        )
+                      : Container(),
+
+                  SizedBox(
+                    height: 20.0,
+                  ),
 
                   Center(
                     child: Text(
                       "**",
-                      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.bold),
                     ),
                   ),
 
-
-                  SizedBox(height: 80.0,),
-
+                  SizedBox(
+                    height: 80.0,
+                  ),
                 ],
               ),
             ),
@@ -669,17 +652,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         child: Center(
                           child: Text(
                             'GO TOP',
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                color: brandGold
-                            ),
+                            style: TextStyle(fontSize: 13.0, color: brandGold),
                           ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: Container(color: brandGold, width: 1.0,),
+                      child: Container(
+                        color: brandGold,
+                        width: 1.0,
+                      ),
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -689,10 +672,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         child: Center(
                           child: Text(
                             'SORT',
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                color: brandGold
-                            ),
+                            style: TextStyle(fontSize: 13.0, color: brandGold),
                           ),
                         ),
                       ),
@@ -702,9 +682,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
             ),
           ),
-          HeaderSecond(idScreen: "header", scaffoldKey: _scaffoldKey,),
+          HeaderSecond(
+            idScreen: "header",
+            scaffoldKey: _scaffoldKey,
+          ),
           NavigationsBar(idScreen: "category"),
-
         ],
       ),
     );
@@ -723,7 +705,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
           ),
           backgroundColor: Colors.black,
-          title: Text('Sort Options', style: TextStyle(color: brandGold),),
+          title: Text(
+            'Sort Options',
+            style: TextStyle(color: brandGold),
+          ),
           content: Container(
               decoration: BoxDecoration(
                 color: Colors.black,
@@ -739,17 +724,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   // Container(color: brandGold, height: 1.0,),
 
                   ListTile(
-                    title: Text("Price: High to Low", style: TextStyle(color: brandGold),),
+                    title: Text(
+                      "Price: High to Low",
+                      style: TextStyle(color: brandGold),
+                    ),
                     onTap: () {
-
                       setState(() {
-                        widget.category.items.sort((a, b) => double.parse(b.priceOffer.toString()).compareTo(double.parse(a.priceOffer.toString())));
+                        widget.category.items.sort((a, b) =>
+                            double.parse(b.priceOffer.toString()).compareTo(
+                                double.parse(a.priceOffer.toString())));
                         if (widget.category.items.length > 20) {
                           items = widget.category.items.sublist(0, 20);
-
                         } else {
                           items = widget.category.items;
-
                         }
 
                         _scrollController.animateTo(
@@ -757,24 +744,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
-
                       });
                       Navigator.of(context).pop();
                     },
                   ),
-                  Container(color: brandGold, height: 0.5,),
+                  Container(
+                    color: brandGold,
+                    height: 0.5,
+                  ),
                   ListTile(
-                    title: Text("Price: Low to High", style: TextStyle(color: brandGold),),
+                    title: Text(
+                      "Price: Low to High",
+                      style: TextStyle(color: brandGold),
+                    ),
                     onTap: () {
-
                       setState(() {
-                        widget.category.items.sort((a, b) => double.parse(a.priceOffer.toString()).compareTo(double.parse(b.priceOffer.toString())));
+                        widget.category.items.sort((a, b) =>
+                            double.parse(a.priceOffer.toString()).compareTo(
+                                double.parse(b.priceOffer.toString())));
                         if (widget.category.items.length > 20) {
                           items = widget.category.items.sublist(0, 20);
-
                         } else {
                           items = widget.category.items;
-
                         }
 
                         _scrollController.animateTo(
@@ -782,38 +773,35 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
-
                       });
                       Navigator.of(context).pop();
                     },
                   ),
                   // Container(color: brandGold, height: 1.0,),
-
                 ],
               )
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemCount: _sortOptions.length,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     return ListTile(
-            //       title: Text(_sortOptions[index], style: TextStyle(color: brandGold),),
-            //       onTap: () {
-            //         setState(() {
-            //           _selectedSortOption = _sortOptions[index];
-            //         });
-            //         Navigator.of(context).pop();
-            //       },
-            //     );
-            //   },
-            // ),
-          ),
+              // ListView.builder(
+              //   shrinkWrap: true,
+              //   itemCount: _sortOptions.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return ListTile(
+              //       title: Text(_sortOptions[index], style: TextStyle(color: brandGold),),
+              //       onTap: () {
+              //         setState(() {
+              //           _selectedSortOption = _sortOptions[index];
+              //         });
+              //         Navigator.of(context).pop();
+              //       },
+              //     );
+              //   },
+              // ),
+              ),
         );
       },
     );
   }
 
-  displayToastMessage(String message, BuildContext context){
+  displayToastMessage(String message, BuildContext context) {
     Fluttertoast.showToast(msg: message);
   }
-
 }

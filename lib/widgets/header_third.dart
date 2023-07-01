@@ -1,19 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:maharani_bakery_app/components/build_rating.dart';
-import 'package:maharani_bakery_app/data/data.dart';
-import 'package:maharani_bakery_app/models/category.dart';
-import 'package:maharani_bakery_app/screens/cakeTypeScreen.dart';
-import 'package:maharani_bakery_app/screens/cart_screen.dart';
-import 'package:maharani_bakery_app/screens/categoryScreen.dart';
-import 'package:maharani_bakery_app/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../screens/searchScreen.dart';
 
 class HeaderThird extends StatelessWidget {
   final idScreen;

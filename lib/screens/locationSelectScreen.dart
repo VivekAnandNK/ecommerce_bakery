@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maharani_bakery_app/data/data.dart';
-import 'package:maharani_bakery_app/widgets/header_second.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../widgets/header.dart';
 import '../widgets/header_third.dart';
 import 'home_screen.dart';
 

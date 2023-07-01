@@ -1,12 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:maharani_bakery_app/models/cake.dart';
-import 'package:maharani_bakery_app/models/cakeCategory.dart';
 import 'package:maharani_bakery_app/models/category.dart';
 import 'package:maharani_bakery_app/models/food.dart';
-import 'package:maharani_bakery_app/screens/cakeItemScreen.dart';
 import 'package:maharani_bakery_app/screens/itemScreen.dart';
 import 'package:optimized_cached_image/optimized_cached_image.dart';
 

@@ -1,23 +1,23 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:maharani_bakery_app/data/data.dart';
 import 'package:maharani_bakery_app/models/order.dart';
 import 'package:maharani_bakery_app/screens/cart_summary.dart';
-import 'package:maharani_bakery_app/widgets/cart_operation.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
-// import 'package:location/location.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../models/user.dart';
 import '../widgets/progressDialog.dart';
 import 'cakeItemScreen.dart';
 import 'home_screen.dart';
 import 'itemScreen.dart';
-import 'package:intl/intl.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);

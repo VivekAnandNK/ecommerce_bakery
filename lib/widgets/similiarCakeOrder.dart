@@ -1,14 +1,11 @@
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:maharani_bakery_app/models/cake.dart';
-import 'package:maharani_bakery_app/models/cakeCategory.dart';
-import 'package:maharani_bakery_app/screens/cakeItemScreen.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'dart:math';
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:maharani_bakery_app/models/cake.dart';
+import 'package:maharani_bakery_app/screens/cakeItemScreen.dart';
+
 import '../data/data.dart';
-import '../models/cakeChildCategory.dart';
 import 'compressedImage.dart';
 
 class SimilarCakeOrder extends StatefulWidget {
@@ -122,7 +119,6 @@ class _SimilarCakeOrderState extends State<SimilarCakeOrder> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadFromFirebase();
   }
@@ -130,66 +126,64 @@ class _SimilarCakeOrderState extends State<SimilarCakeOrder> {
   @override
   Widget build(BuildContext context) {
 
-    return loaded ? randomCakes.length > 0 ? SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          for(var elements in randomCakes)
-            GestureDetector(
-              onTap: (){
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(cake: elements, categoryId: 'CakesCategories', categoryMainId: widget.cakeChildCategoryId,)),);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 90.0,
-                      height: 90.0,
-                      decoration: BoxDecoration(
-                          // image: DecorationImage(
-                          //     image: OptimizedCacheImageProvider(
-                          //         elements.imageUrl[0]
-                          //     ),
-                          //     fit: BoxFit.cover
-                          // ),
-                          borderRadius: BorderRadius.circular(15.0)
-                      ),
-                      child: CompressedImage(imageUrl: elements.imageUrl[0], quality: 5),
-                    ),
-                    SizedBox(height: 10.0,),
-
-                    Column(
-                      children: [
-                        Text(
-                          "${elements.name.split(" ")[0]}...",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Candarai"
-                          ),
-                        ),
-                        Text(
-                          '\u{20B9} ${elements.weightPrice[elements.weightPrice.keys.toList()[0]]}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
+    return loaded ? randomCakes.length > 0 ?
+    ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: ScrollPhysics(),
+        itemCount: randomCakes.length,
+        itemBuilder: (BuildContext context, int index){
+      return
+        GestureDetector(
+        onTap: (){
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(cake: randomCakes[index], categoryId: 'CakesCategories', categoryMainId: widget.cakeChildCategoryId,)),);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              Container(
+                width: 90.0,
+                height: 90.0,
+                decoration: BoxDecoration(
+                  // image: DecorationImage(
+                  //     image: OptimizedCacheImageProvider(
+                  //         elements.imageUrl[0]
+                  //     ),
+                  //     fit: BoxFit.cover
+                  // ),
+                    borderRadius: BorderRadius.circular(15.0)
                 ),
+                child: CompressedImage(imageUrl: randomCakes[index].imageUrl[0], quality: 5),
               ),
-            ),
-        ],
-      ),
-    ) : Text("No similar cakes found") : CircularProgressIndicator();
+              SizedBox(height: 10.0,),
+
+              Column(
+                children: [
+                  Text(
+                    "${randomCakes[index].name.split(" ")[0]}...",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "Candarai"
+                    ),
+                  ),
+                  Text(
+                    '\u{20B9} ${randomCakes[index].weightPrice[randomCakes[index].weightPrice.keys.toList()[0]]}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }) : Text("No similar cakes found") : CircularProgressIndicator();
   }
 }

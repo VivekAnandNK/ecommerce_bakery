@@ -1,25 +1,16 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:maharani_bakery_app/components/build_rating.dart';
 import 'package:maharani_bakery_app/data/data.dart';
-import 'package:maharani_bakery_app/models/category.dart';
-import 'package:maharani_bakery_app/screens/cakeTypeScreen.dart';
-import 'package:maharani_bakery_app/screens/cart_screen.dart';
-import 'package:maharani_bakery_app/screens/categoryScreen.dart';
-import 'package:maharani_bakery_app/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../screens/searchScreen.dart';
 import '../screens/wishlistScreen.dart';
 
 class HeaderSecond extends StatelessWidget {
   final idScreen;
   dynamic scaffoldKey;
-  HeaderSecond({Key? key, required this.idScreen, required this.scaffoldKey}) : super(key: key);
+
+  HeaderSecond({Key? key, required this.idScreen, required this.scaffoldKey})
+      : super(key: key);
 
   Future<void> _launchUrl(Uri url, BuildContext context) async {
     if (!await launchUrl(url)) {
@@ -60,7 +51,6 @@ class HeaderSecond extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-
               Container(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -68,20 +58,17 @@ class HeaderSecond extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Padding(
                         padding: const EdgeInsets.only(top: 20.0),
                         child: IconButton(
                             onPressed: () {
                               scaffoldKey.currentState!.openDrawer();
-
                             },
                             icon: Icon(
                               Icons.menu,
                               size: 30,
                               color: brandGold,
-                            )
-                        ),
+                            )),
                       ),
 
                       Expanded(
@@ -93,8 +80,10 @@ class HeaderSecond extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  child: Image.asset("assets/images/1.png",
-                                    height: 80,),
+                                  child: Image.asset(
+                                    "assets/images/1.png",
+                                    height: 80,
+                                  ),
                                 ),
 
                                 // Container(
@@ -115,13 +104,13 @@ class HeaderSecond extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 20.0),
                         child: TextButton(
                           onPressed: () {
-                            if(idScreen != "wishlist"){
+                            if (idScreen != "wishlist") {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => WishlistScreen())
-                              );
+                                  MaterialPageRoute(
+                                      builder: (_) => WishlistScreen()));
                             }
-                          } ,
+                          },
                           child: Stack(
                             children: [
                               Icon(
@@ -175,7 +164,6 @@ class HeaderSecond extends StatelessWidget {
               //
               //   ),
               // ),
-
             ],
           ),
         ),
@@ -183,7 +171,7 @@ class HeaderSecond extends StatelessWidget {
     );
   }
 
-  displayToastMessage(String message, BuildContext context){
+  displayToastMessage(String message, BuildContext context) {
     Fluttertoast.showToast(msg: message);
   }
 }
