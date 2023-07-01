@@ -468,7 +468,7 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
                      itemCount: items.length,
                      shrinkWrap: true,
                      physics: NeverScrollableScrollPhysics(),
-                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,childAspectRatio: (MediaQuery.of(context).size.height * 0.0009)),
+                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,mainAxisExtent: 300),
                      itemBuilder: (BuildContext context, int index) {
                        return GestureDetector(
                          onTap: (){
