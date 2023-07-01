@@ -241,7 +241,7 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               width: 150.0,
