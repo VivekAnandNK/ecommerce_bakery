@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:maharani_bakery_app/screens/wishlistScreen.dart';
 import 'package:maharani_bakery_app/widgets/navigationBar.dart';
 import 'package:maharani_bakery_app/components/build_rating.dart';
@@ -57,7 +58,7 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
   bool isFavourite = false;
   bool loading = false;
   bool endOfList = false;
-  List<dynamic> items = [];
+  List<dynamic> items = List.empty(growable: true).obs;
   bool highToLow = false;
   bool lowToHigh = false;
   String _selectedSortOption = 'Price: High to Low';
@@ -184,9 +185,9 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
     }
     allItems = null;
 
-    setState(() {
+    // setState(() {
       items.addAll(newItems);
-    });
+    // });
 
     setState(() {
       loading = false;
@@ -262,7 +263,6 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
             ),
             SizedBox(height: 20.0,),
             Column(
-
               children: [
 
                 Text(
@@ -276,41 +276,45 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
                   textAlign: TextAlign.center,
 
                 ),
-                SizedBox(height: 10.0,),
+                SizedBox(height: 5.0,),
 
-                menuItem.inStock ? menuItem.offerAvailable ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '\u{20B9} ${menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]]}',
-                      style: TextStyle(
-                          color: Colors.black45,
+                menuItem.inStock ? !menuItem.offerAvailable ?
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '\u{20B9} ${menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]]}',
+                        style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.lineThrough
+                        ),
+                      ),
+                      SizedBox(width: 5.0,),
+                      Text(
+                        '\u{20B9} ${menuItem.weightPriceOffer[menuItem.weightPriceOffer.keys.toList()[0]]}',
+                        style: TextStyle(
+                          color: Colors.black,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.lineThrough
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 5.0,),
-                    Text(
-                      '\u{20B9} ${menuItem.weightPriceOffer[menuItem.weightPriceOffer.keys.toList()[0]]}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: 5.0,),
+                      SizedBox(width: 5.0,),
 
-                    // Text(
-                    //   '${(((menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]] - menuItem.weightPriceOffer[menuItem.weightPriceOffer.keys.toList()[0]]) / menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]]) * 100).toInt()}% OFF',
-                    //   style: TextStyle(
-                    //     color: Colors.green,
-                    //     fontSize: 15,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
+                      // Text(
+                      //   '${(((menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]] - menuItem.weightPriceOffer[menuItem.weightPriceOffer.keys.toList()[0]]) / menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]]) * 100).toInt()}% OFF',
+                      //   style: TextStyle(
+                      //     color: Colors.green,
+                      //     fontSize: 15,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
 
-                  ],
+                    ],
+                  ),
                 ) : Text(
                   '\u{20B9} ${menuItem.weightPrice[menuItem.weightPrice.keys.toList()[0]]}',
                   style: TextStyle(
@@ -459,33 +463,33 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 130.0,),
-                  GridView.builder(
-                      key: UniqueKey(),
-                      itemCount: items.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3),
-                      itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index], categoryMainId: widget.categoryId,)),);
+                 Obx(() => GridView.builder(
+                     key: UniqueKey(),
+                     itemCount: items.length,
+                     shrinkWrap: true,
+                     physics: NeverScrollableScrollPhysics(),
+                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,childAspectRatio: (MediaQuery.of(context).size.height * 0.0009)),
+                     itemBuilder: (BuildContext context, int index) {
+                       return GestureDetector(
+                         onTap: (){
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index], categoryMainId: widget.categoryId,)),);
 
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: _buildMenu(
-                                context,
-                                items[index],
-                                index,
-                                items.length
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                         },
+                         child: Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Flexible(
+                               child: _buildMenu(
+                                   context,
+                                   items[index],
+                                   index,
+                                   items.length
+                               ),
+                             ),
+                           ],
+                         ),
+                       );
+                     })),
 
                   // for(var index=0; index<items.length; index+=2)...{
                   //
