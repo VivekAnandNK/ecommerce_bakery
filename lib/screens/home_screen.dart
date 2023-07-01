@@ -330,6 +330,7 @@ class _HomeState extends State<Home> {
                                 MaterialPageRoute(builder: (_) => CakeTypeScreen(category: elements, categoriesGlobal: elements.childCategories,))
                             );
                           } else {
+                            if( elements.childCategories.isNotEmpty)
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => CategoryScreen(category: elements.childCategories[0], categoryMain: elements,)));

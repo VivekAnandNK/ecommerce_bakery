@@ -195,7 +195,6 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadMoreItems();
     // widget.category.items.sort((a, b) => int.parse(a.number).compareTo(int.parse(b.number)));
@@ -222,26 +221,19 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
   Widget _buildMenu(BuildContext context, Cake menuItem, int index, int length) {
     // print(length % 2 != 0 && index == length - 2);
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        border: index > 1 ? (length % 2 != 0 && index == length - 2) ?
-        Border(
-          top: BorderSide(
+        border: index < 2  ? Border(
+          right: BorderSide(
               color: Colors.black12.withOpacity(0.2)
-          ),
-          bottom: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) :
-        Border(
-          top: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) : (length % 2 != 0 && index == length - 2) ?
-        Border(
-          bottom: BorderSide(
-              color: Colors.black12.withOpacity(0.2)
-          ),
-        ) : Border(),
+          )
+
+        ):index > length-2  ?  Border(
+            right: BorderSide(
+                color: Colors.black12.withOpacity(0.2)
+            )
+
+        ):  Border.all(color: Colors.black12.withOpacity(0.1))
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -467,48 +459,77 @@ class _CakeCategoryScreenState extends State<CakeCategoryScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 130.0,),
+                  GridView.builder(
+                      key: UniqueKey(),
+                      itemCount: items.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3),
+                      itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index], categoryMainId: widget.categoryId,)),);
 
-                  for(var index=0; index<items.length; index+=2)
-                    IntrinsicHeight(
+                      },
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                              child: GestureDetector(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index], categoryMainId: widget.categoryId,)),);
-
-                                },
-                                child: _buildMenu(
-                                    context,
-                                    items[index],
-                                    index,
-                                    items.length
-                                ),
-                              )
-                          ),
-
-                          VerticalDividerWidget(),
-                          items.length - 1 != index ?
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index + 1], categoryMainId: widget.categoryId,)),);
-
-
-                              },
-                              child: _buildMenu(
-                                  context,
-                                  items[index+1],
-                                  index + 1,
-                                  items.length
-                              ),
+                          Flexible(
+                            child: _buildMenu(
+                                context,
+                                items[index],
+                                index,
+                                items.length
                             ),
-                          ) :
-                          Expanded(child: Container()),
+                          ),
                         ],
                       ),
-                    ),
+                    );
+                  }),
+
+                  // for(var index=0; index<items.length; index+=2)...{
+                  //
+                  //   IntrinsicHeight(
+                  //     child: Row(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Expanded(
+                  //             child: GestureDetector(
+                  //               onTap: (){
+                  //                 Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index], categoryMainId: widget.categoryId,)),);
+                  //
+                  //               },
+                  //               child: _buildMenu(
+                  //                   context,
+                  //                   items[index],
+                  //                   index,
+                  //                   items.length
+                  //               ),
+                  //             )
+                  //         ),
+                  //
+                  //         VerticalDividerWidget(),
+                  //         items.length - 1 != index ?
+                  //         Expanded(
+                  //           child: GestureDetector(
+                  //             onTap: (){
+                  //               Navigator.push(context, MaterialPageRoute(builder: (context) => CakeItemScreen(categoryId: widget.childCategoryId, cake: items[index + 1], categoryMainId: widget.categoryId,)),);
+                  //
+                  //
+                  //             },
+                  //             child: _buildMenu(
+                  //                 context,
+                  //                 items[index+1],
+                  //                 index + 1,
+                  //                 items.length
+                  //             ),
+                  //           ),
+                  //         ) :
+                  //         Expanded(child: Container()),
+                  //       ],
+                  //     ),
+                  //   )
+                  // },
 
                   SizedBox(height: 20.0,),
 
